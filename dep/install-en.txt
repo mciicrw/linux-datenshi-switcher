@@ -1,0 +1,19 @@
+Open wine control panel using `wine control` command
+
+Double click Internet Settings icon, then click "Content" tab, then click "Certificates" button
+
+Click "Trusted Root Certification Authorities" tab and click "Import"
+
+Click "Next"
+
+Click "Browse.." then click Datenshi certificate that come with this app
+
+Click "Next"
+
+Choose "Automatically select certificate store"
+
+Click "Next"
+
+Click "Finish"
+
+You'll get "The import was successful" message, and the import is done
