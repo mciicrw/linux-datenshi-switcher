@@ -1,5 +1,6 @@
 import os
 import sys
+import qdarkstyle
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -7,11 +8,17 @@ from PyQt5.QtGui import *
 class aboutDialog(QDialog):
 	def __init__(self, parent):
 		super().__init__(parent)
-		self.setFixedSize(280,280)
+		self.setFixedSize(300,315)
 		self.setWindowTitle("About")
 
 		abDialogLay = QVBoxLayout()
 		logoLayout = QHBoxLayout()
+
+		creatorBox = QGroupBox("About Switcher")
+		creatorBoxLayout = QVBoxLayout()
+
+		licenseBox = QGroupBox("About License")
+		licenseBoxLayout = QVBoxLayout()
 
 		qtLogo = QLabel()
 		qLogoPic = QPixmap()
@@ -35,9 +42,17 @@ class aboutDialog(QDialog):
 
 		aboutCreate = QLabel("Created by TypicalNoob- using PyQt5 Library and Python 3 Programming language")
 		aboutCreate.setWordWrap(True)
+		creatorBoxLayout.addWidget(aboutCreate)
+		creatorBoxLayout.setContentsMargins(3,3,3,3)
+
+		creatorBox.setLayout(creatorBoxLayout)
 
 		aboutLicense = QLabel("This program is created under LGPL 3.0 license, modification is allowed by following the conditions provided by LGPL 3.0")
 		aboutLicense.setWordWrap(True)
+		licenseBoxLayout.addWidget(aboutLicense)
+		licenseBoxLayout.setContentsMargins(3,3,3,3)
+
+		licenseBox.setLayout(licenseBoxLayout)
 
 		okBtn = QPushButton("Ok")
 		okBtn.clicked.connect(self.close)
@@ -45,32 +60,64 @@ class aboutDialog(QDialog):
 
 		abDialogLay.addLayout(logoLayout)
 		abDialogLay.addWidget(aboutName)
-		abDialogLay.addWidget(aboutCreate)
-		abDialogLay.addWidget(aboutLicense)
+		abDialogLay.addWidget(creatorBox)
+		abDialogLay.addWidget(licenseBox)
 		abDialogLay.addWidget(okBtn, alignment=Qt.AlignRight)
 		abDialogLay.setAlignment(Qt.AlignCenter)
+		abDialogLay.setSpacing(1)
 
 		self.setLayout(abDialogLay)
 
 class installCertificate(QDialog):
 	def __init__(self, parent):
 		super().__init__(parent)
-		self.setFixedSize(350,350)
+		self.setFixedSize(400,420)
 		self.setWindowTitle("Installing Certificate")
+		self.lang = 1
 
 		iCertLay = QVBoxLayout()
+		butCertLay = QHBoxLayout()
 
-		enCertText = QLabel()
+		installBox = QGroupBox("How to install certificate")
+		installBoxLayout = QVBoxLayout()
+
+		self.certText = QLabel()
 		sourc = open('dep/install-en.txt').read()
-		enCertText.setText(sourc)
-		enCertText.setWordWrap(True)
-		iCertLay.addWidget(enCertText)
+		self.certText.setText(sourc)
+		self.certText.setWordWrap(True)
+		installBoxLayout.addWidget(self.certText)
+
+		installBoxLayout.setContentsMargins(4,4,4,4)
+
+		installBox.setLayout(installBoxLayout)
+
+		iCertLay.addWidget(installBox)
+
+		langBtn = QPushButton("Language")
+		langBtn.clicked.connect(self.lang_handler)
+		langBtn.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+		butCertLay.addWidget(langBtn)
 
 		exBtn = QPushButton("Close")
 		exBtn.clicked.connect(self.close)
-		iCertLay.addWidget(exBtn)
+		exBtn.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+		butCertLay.addWidget(exBtn, alignment=Qt.AlignRight)
+
+		iCertLay.addLayout(butCertLay)
 
 		self.setLayout(iCertLay)
+
+	@pyqtSlot()
+	def lang_handler(self):
+		enLang = open('dep/install-en.txt').read()
+		idLang = open('dep/install-id.txt').read() 
+		if self.lang == 1:
+			self.certText.setText(idLang)
+			self.lang = 2
+		else:
+			self.certText.setText(enLang)
+			self.lang = 1
+
 
 class App(QWidget):
 	def __init__(self):
@@ -90,7 +137,7 @@ class App(QWidget):
 		siz.setPointSize(23)
 		warn.setFont(siz)
 		warn.setWordWrap(True)
-		warn.setStyleSheet("background-color: white; border: 5px solid white; color: red")
+		warn.setStyleSheet("background-color: #19232D; border: 5px solid #19232D; color: red")
 
 		logo = QLabel("logo")
 		logo.setPixmap(QPixmap('dep/datenshi.png'))
@@ -113,7 +160,7 @@ class App(QWidget):
 		aboutBtn = QPushButton("about",self)
 		aboutBtn.setFlat(True)
 		aboutBtn.clicked.connect(self.ab_click)
-		aboutBtn.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+		aboutBtn.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
 
 		self.cKonek()
 
@@ -121,15 +168,18 @@ class App(QWidget):
 
 		layH.addWidget(pbtn)
 		layH.addWidget(dbtn)
+		#layH.setContentsMargins(6,3,6,3)
 
 		mLayout = QVBoxLayout()
 
-		mLayout.addWidget(logo)
+		mLayout.addWidget(logo, alignment=Qt.AlignCenter)
 		mLayout.addWidget(date)
 		mLayout.addWidget(self.stat)
 		mLayout.addLayout(layH)
 		mLayout.addWidget(self.konekBox)
 		mLayout.addWidget(aboutBtn)
+		mLayout.setSpacing(1)
+		mLayout.setContentsMargins(6,3,6,6)
 
 		wLayout = QVBoxLayout()
 		wLayout.addWidget(warn)
@@ -156,6 +206,7 @@ class App(QWidget):
 		self.stats = QLabel(self)
 		self.stats.setText("Press the button")
 		hoKoLayout.addWidget(self.stats)
+		hoKoLayout.setContentsMargins(3,3,3,3)
 
 		self.konekBox.setLayout(hoKoLayout)
 
@@ -199,6 +250,8 @@ class App(QWidget):
 
 
 if __name__ == '__main__':
+    dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5()
     app = QApplication(sys.argv)
+    app.setStyleSheet(dark_stylesheet)
     ex = App()
     sys.exit(app.exec_())	
