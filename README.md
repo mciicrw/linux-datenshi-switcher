@@ -18,6 +18,12 @@ TODO: complete this section
 - Python3 (Python 3.8.x recommended as i'm using this version)
 - PyQt5 (5.12.8+)
 - Pyinstaller (latest recommended)
+- QDarkStyle (For dark theme)
+
+If you don't want to use dark theme, then skip qdarkstyle it and delete (or comment out) these lines:
+- `import qdarkstyle`
+- `dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5()`
+- `app.setStyleSheet(dark_stylesheet)`
 
 #### Building
 
