@@ -2,7 +2,7 @@
 
 As the name said, this app is used to switch between [Official Bancho Server](https://osu.ppy.sh) and [Datenshi Private Server](https://datenshi.xyz), this one is forked from my other project but yet to be released, so stay tune.
 
-Why there's none server switcher in linux? well, this happened because of wine's behavior, we can't directy install certificate into wine's trusted root certificate list via commandline, this app also can't do that, only make editing `/etc/hosts` easier, but there's prompt of "How to install certificate manually" evertime "Switch to Private Server" button pressed, so don't worry if you forgot to install certificate in first place
+Why there's none server switcher in linux? well, this happened because of wine's behavior, we can't directy install certificate into wine's trusted root certificate list via commandline, this app also can't do that, only make editing `/etc/hosts` easier, but there's prompt of "How to install certificate manually" evertime "Switch to Datenshi" button pressed, so don't worry if you forgot to install certificate in first place
 
 ## How to use
 
@@ -20,17 +20,17 @@ TODO: complete this section
 - Pyinstaller (latest recommended)
 - QDarkStyle (For dark theme)
 
-If you don't want to use dark theme, then skip qdarkstyle it and delete (or comment out) these lines:
-- `import qdarkstyle`
-- `dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5()`
-- `app.setStyleSheet(dark_stylesheet)`
-
 #### Building
 
-- install the dependency first `pip install PyQt5 pyinstaller`
+- install the dependency first `pip install PyQt5 pyinstaller qdarkstyle`
 - move to linux server switcher folder
 - run `pyinstaller --add-data 'dep:dep' switcher.py`
 - compiled app can be found inside "dist" folder
+
+If you don't want to use dark theme, then skip qdarkstyle installation and delete (or comment out) these lines:
+- `import qdarkstyle`
+- `dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5()`
+- `app.setStyleSheet(dark_stylesheet)`
 
 #### Running app
 

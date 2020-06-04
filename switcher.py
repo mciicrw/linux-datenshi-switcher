@@ -13,6 +13,7 @@ class aboutDialog(QDialog):
 
 		abDialogLay = QVBoxLayout()
 		logoLayout = QHBoxLayout()
+		buttonLayout = QHBoxLayout()
 
 		creatorBox = QGroupBox("About Switcher")
 		creatorBoxLayout = QVBoxLayout()
@@ -54,15 +55,23 @@ class aboutDialog(QDialog):
 
 		licenseBox.setLayout(licenseBoxLayout)
 
+		versionLabel = QLabel("Alpha 3-r9")
+		vLabelFont = versionLabel.font()
+		vLabelFont.setPointSize(8)
+#		versionLabel.setTextFormat("Bold")
+		versionLabel.setFont(vLabelFont)
+		buttonLayout.addWidget(versionLabel)
+
 		okBtn = QPushButton("Ok")
 		okBtn.clicked.connect(self.close)
 		okBtn.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+		buttonLayout.addWidget(okBtn, alignment=Qt.AlignRight)
 
 		abDialogLay.addLayout(logoLayout)
 		abDialogLay.addWidget(aboutName)
 		abDialogLay.addWidget(creatorBox)
 		abDialogLay.addWidget(licenseBox)
-		abDialogLay.addWidget(okBtn, alignment=Qt.AlignRight)
+		abDialogLay.addLayout(buttonLayout)
 		abDialogLay.setAlignment(Qt.AlignCenter)
 		abDialogLay.setSpacing(1)
 
@@ -122,11 +131,13 @@ class installCertificate(QDialog):
 class App(QWidget):
 	def __init__(self):
 		super().__init__()
-		with open('/etc/hosts','r') as f:
-				if "139.99.88.243" in f.read():
-					self.serv = "you currently connected to Datenshi"
+		with open('../hosts','r') as f:
+				if "139.99.88.243 osu.ppy.sh" in f.read():
+					self.serv = "Datenshi"
+				elif '*' + "osu.ppy.sh" in f.read():
+					self.serv = "Other Private Server"
 				else:
-					self.serv = "you currently connected to Official Bancho Server"
+					self.serv = "Official Bancho Server"
 		self.initUI()
 
 	def initUI(self):
@@ -137,7 +148,8 @@ class App(QWidget):
 		siz.setPointSize(23)
 		warn.setFont(siz)
 		warn.setWordWrap(True)
-		warn.setStyleSheet("background-color: #19232D; border: 5px solid #19232D; color: red")
+		warn.setStyleSheet("color: red")
+		warn.setAlignment(Qt.AlignCenter)
 
 		logo = QLabel("logo")
 		logo.setPixmap(QPixmap('dep/datenshi.png'))
@@ -147,17 +159,17 @@ class App(QWidget):
 		font.setPointSize(15)
 		date.setFont(font)
 
-		self.stat = QLabel(self.serv)
+		self.stat = QLabel("You currently connected to " + self.serv)
 
-		pbtn = QPushButton("Swith to PPY", self)
+		pbtn = QPushButton("Swith to PPY")
 		pbtn.setToolTip("Switch to Offical Bancho server")
 		pbtn.clicked.connect(self.pb_click)
 
-		dbtn = QPushButton("Switch to Datenshi", self)
+		dbtn = QPushButton("Switch to Datenshi")
 		dbtn.setToolTip("Switch to Datneshi server")
 		dbtn.clicked.connect(self.db_click)
 
-		aboutBtn = QPushButton("about",self)
+		aboutBtn = QPushButton("about")
 		aboutBtn.setFlat(True)
 		aboutBtn.clicked.connect(self.ab_click)
 		aboutBtn.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
@@ -212,21 +224,33 @@ class App(QWidget):
 
 	@pyqtSlot()
 	def pb_click(self):
-		with open("/etc/hosts", "r") as f:
+		with open("../hosts", "r") as f:
 			lines = f.readlines()
-		with open("/etc/hosts", "w") as f:
+		with open("../hosts", "w") as f:
 			for line in lines:
 				if line.strip("\n") != "139.99.88.243 osu.ppy.sh c.ppy.sh c1.ppy.sh c2.ppy.sh c3.ppy.sh c4.ppy.sh c5.ppy.sh c6.ppy.sh ce.ppy.sh a.ppy.sh i.ppy.sh":
 					f.write(line)
-		self.stat.setText("you currently connected to Official Bancho Server")
+
+		with open("../hosts", "r") as f:
+			file_out = []
+			for line in f:
+				file_out.append(line)
+
+		while file_out[-1] == '\n':
+			file_out.pop(-1)
+
+		with open("../hosts", "w") as f:
+			f.write(''.join(file_out))
+
+		self.stat.setText("You currently connected to Official Bancho Server")
 
 
 	@pyqtSlot()
 	def db_click(self):
-		with open("/etc/hosts", "a") as f:
+		with open("../hosts", "a") as f:
 			f.write("\n")
 			f.write("139.99.88.243 osu.ppy.sh c.ppy.sh c1.ppy.sh c2.ppy.sh c3.ppy.sh c4.ppy.sh c5.ppy.sh c6.ppy.sh ce.ppy.sh a.ppy.sh i.ppy.sh")
-		self.stat.setText("you currently connected to Datenshi")
+		self.stat.setText("You currently connected to Datenshi")
 
 		self.inCert = installCertificate(self)
 		self.inCert.exec_()
@@ -247,8 +271,6 @@ class App(QWidget):
 		self.abDialog = aboutDialog(self)
 		self.abDialog.show()
 		
-
-
 if __name__ == '__main__':
     dark_stylesheet = qdarkstyle.load_stylesheet_pyqt5()
     app = QApplication(sys.argv)
