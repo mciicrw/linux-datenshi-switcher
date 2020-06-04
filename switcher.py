@@ -131,7 +131,7 @@ class installCertificate(QDialog):
 class App(QWidget):
 	def __init__(self):
 		super().__init__()
-		with open('../hosts','r') as f:
+		with open('/etc/hosts','r') as f:
 				if "139.99.88.243 osu.ppy.sh" in f.read():
 					self.serv = "Datenshi"
 				elif '*' + "osu.ppy.sh" in f.read():
@@ -224,14 +224,14 @@ class App(QWidget):
 
 	@pyqtSlot()
 	def pb_click(self):
-		with open("../hosts", "r") as f:
+		with open("/etc/hosts", "r") as f:
 			lines = f.readlines()
-		with open("../hosts", "w") as f:
+		with open("/etc/hosts", "w") as f:
 			for line in lines:
 				if line.strip("\n") != "139.99.88.243 osu.ppy.sh c.ppy.sh c1.ppy.sh c2.ppy.sh c3.ppy.sh c4.ppy.sh c5.ppy.sh c6.ppy.sh ce.ppy.sh a.ppy.sh i.ppy.sh":
 					f.write(line)
 
-		with open("../hosts", "r") as f:
+		with open("/etc/hosts", "r") as f:
 			file_out = []
 			for line in f:
 				file_out.append(line)
@@ -239,7 +239,7 @@ class App(QWidget):
 		while file_out[-1] == '\n':
 			file_out.pop(-1)
 
-		with open("../hosts", "w") as f:
+		with open("/etc/hosts", "w") as f:
 			f.write(''.join(file_out))
 
 		self.stat.setText("You currently connected to Official Bancho Server")
@@ -247,7 +247,7 @@ class App(QWidget):
 
 	@pyqtSlot()
 	def db_click(self):
-		with open("../hosts", "a") as f:
+		with open("/etc/hosts", "a") as f:
 			f.write("\n")
 			f.write("139.99.88.243 osu.ppy.sh c.ppy.sh c1.ppy.sh c2.ppy.sh c3.ppy.sh c4.ppy.sh c5.ppy.sh c6.ppy.sh ce.ppy.sh a.ppy.sh i.ppy.sh")
 		self.stat.setText("You currently connected to Datenshi")
